@@ -1,0 +1,10 @@
+<div class="flex gap-1">
+  <app-button
+    *ngFor="let cloth of clothes"
+    (click)="cloth$.emit({
+    type,
+    asset: cloth
+  })"
+    >{{ cloth.name }}
+  </app-button>
+</div>

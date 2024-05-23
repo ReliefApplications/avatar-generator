@@ -1,0 +1,7 @@
+<div class="flex gap-1">
+  <app-button
+    *ngFor="let avatar of avatarService.avatars"
+    (click)="avatar$.emit(avatar)"
+    >{{ avatar.name }}
+  </app-button>
+</div>
