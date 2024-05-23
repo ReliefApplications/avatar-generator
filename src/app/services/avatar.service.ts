@@ -7,10 +7,10 @@ const BASE_SRC_TSHIRT = 'assets/avatar/t-shirts';
 const BASE_SRC_SHOES = 'assets/avatar/shoes';
 
 export interface IAvatar {
-  baseSrc: string;
+  name: string;
   clothes: {
     type: TClothType;
-    asset: ICloth;
+    name: string;
   }[];
 }
 
@@ -22,9 +22,6 @@ export interface IAvatarBase {
 export interface ICloth {
   src: string;
   name: string;
-  x: number;
-  y: number;
-  ratio: number;
 }
 
 export type TClothType = 't-shirt' | 'shoes';
@@ -50,77 +47,78 @@ export class AvatarService {
 
   public clothes: {
     type: TClothType;
-    assets: ICloth[];
+    baseSrc: string;
+    assets: { src: string; name: string }[];
   }[] = [
     {
       type: 't-shirt',
       assets: [
         {
-          src: BASE_SRC_TSHIRT + '/lion/blue.png',
+          src: 'blue.png',
           name: 'blue',
-          x: 0,
-          y: 0,
-          ratio: 1,
         },
         {
-          src: BASE_SRC_TSHIRT + '/lion/red.png',
+          src: 'red.png',
           name: 'red',
-          x: 0,
-          y: 0,
-          ratio: 1,
         },
         {
-          src: BASE_SRC_TSHIRT + '/lion/green.png',
+          src: 'green.png',
           name: 'green',
-          x: 0,
-          y: 0,
-          ratio: 1,
         },
       ],
+      baseSrc: BASE_SRC_TSHIRT,
     },
     {
       type: 'shoes',
       assets: [
         {
-          src: BASE_SRC_SHOES + '/lion/blue.png',
+          src: 'blue.png',
           name: 'blue',
-          x: 0,
-          y: 0,
-          ratio: 1,
         },
         {
-          src: BASE_SRC_SHOES + '/lion/orange.png',
+          src: 'orange.png',
           name: 'orange',
-          x: 0,
-          y: 0,
-          ratio: 1,
         },
         {
-          src: BASE_SRC_SHOES + '/lion/red.png',
+          src: 'red.png',
           name: 'red',
-          x: 0,
-          y: 0,
-          ratio: 1,
         },
-      ]
-    }
+      ],
+      baseSrc: BASE_SRC_SHOES,
+    },
   ];
 
   public avatar: IAvatar = {
-    baseSrc: this.avatars[0].src,
+    name: 'lion',
     clothes: [
       {
         type: 't-shirt',
-        asset: {
-          src: BASE_SRC_TSHIRT + '/france.png',
-          name: 't-shirt france',
-          x: 130,
-          y: 120,
-          ratio: 0.5,
-        },
+        name: 'red',
       },
     ],
   };
 
   constructor() {}
+
+  getAvatar() {
+    const avatar = this.avatars.find((x) => x.name === this.avatar.name);
+    return avatar || this.avatars[0];
+  }
+
+  getAvatarClothes() {
+    const clothes: ICloth[] = [];
+    for (const cloth of this.avatar.clothes) {
+      const store = this.clothes.find((x) => x.type === cloth.type);
+      if (store) {
+        const asset = store.assets.find((asset) => asset.name === cloth.name);
+        if (asset) {
+          clothes.push({
+            src: `${store.baseSrc}/${this.avatar.name}/${asset.src}`,
+            name: asset.name,
+          });
+        }
+      }
+    }
+    return clothes;
+  }
 }

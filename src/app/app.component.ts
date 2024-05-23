@@ -23,18 +23,23 @@ export class AppComponent {
   onSelectAvatar(avatar: IAvatarBase): void {
     this.avatarService.avatar = {
       ...this.avatarService.avatar,
-      baseSrc: avatar.src,
+      name: avatar.name,
     };
     this.avatar = this.avatarService.avatar;
   }
 
-  onSelectCloth(cloth: { type: TClothType; asset: ICloth }): void {
-    const clothes = this.avatarService.avatar.clothes.filter((x) => x.type !== cloth.type);
-    clothes.push(cloth);
+  onSelectCloth(cloth: { type: TClothType; name: string }): void {
+    const clothes = this.avatarService.avatar.clothes.filter(
+      (x) => x.type !== cloth.type
+    );
+    clothes.push({
+      type: cloth.type,
+      name: cloth.name,
+    });
     this.avatarService.avatar = {
       ...this.avatarService.avatar,
       clothes,
-    }
+    };
     this.avatar = this.avatarService.avatar;
   }
 }

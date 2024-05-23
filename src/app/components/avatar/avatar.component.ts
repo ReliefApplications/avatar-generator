@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Konva from 'konva';
-import { IAvatar } from 'src/app/services/avatar.service';
+import { AvatarService, IAvatar } from 'src/app/services/avatar.service';
 
 @Component({
   selector: 'app-avatar',
@@ -19,6 +19,8 @@ export class AvatarComponent {
   private stage!: Konva.Stage;
   private layer!: Konva.Layer;
 
+  constructor(private avatarService: AvatarService) {}
+
   ngAfterViewInit() {
     this.initializeStage();
     this.updateAvatar();
@@ -26,6 +28,7 @@ export class AvatarComponent {
 
   ngOnChanges() {
     if (this.stage) {
+      console.log(this.avatar);
       this.updateAvatar();
     }
   }
@@ -44,7 +47,9 @@ export class AvatarComponent {
   private updateAvatar() {
     this.layer.destroyChildren();
 
-    Konva.Image.fromURL(this.avatar.baseSrc, (baseImg) => {
+    const avatar = this.avatarService.getAvatar();
+
+    Konva.Image.fromURL(avatar.src, (baseImg) => {
       baseImg.setAttrs({
         x: 0,
         y: 0,
@@ -53,14 +58,18 @@ export class AvatarComponent {
       });
 
       this.layer.add(baseImg);
-      this.avatar.clothes.forEach((x) => {
-        const cloth = x.asset;
+
+      const clothes = this.avatarService.getAvatarClothes();
+
+      console.log(clothes);
+
+      clothes.forEach((cloth) => {
         Konva.Image.fromURL(cloth.src, (clothImg) => {
           clothImg.setAttrs({
-            x: cloth.x,
-            y: cloth.y,
-            width: this.stage.width() * cloth.ratio,
-            height: this.stage.height() * cloth.ratio,
+            x: 0,
+            y: 0,
+            width: this.stage.width(),
+            height: this.stage.height(),
           });
           this.layer.add(clothImg);
         });

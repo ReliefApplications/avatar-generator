@@ -18,13 +18,11 @@ export class ClothSelectorComponent {
   @Input() type!: TClothType;
   @Output() cloth$ = new EventEmitter<{
     type: TClothType;
-    asset: ICloth;
+    name: string;
   }>();
-  public clothes: ICloth[] = [];
+  public clothes: { src: string; name: string }[] = [];
 
-  constructor(private avatarService: AvatarService) {
-
-  }
+  constructor(private avatarService: AvatarService) {}
 
   ngOnInit() {
     this.clothes =

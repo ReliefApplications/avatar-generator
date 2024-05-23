@@ -3,7 +3,7 @@
     *ngFor="let cloth of clothes"
     (click)="cloth$.emit({
     type,
-    asset: cloth
+    name: cloth.name
   })"
     >{{ cloth.name }}
   </app-button>
